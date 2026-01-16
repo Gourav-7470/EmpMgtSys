@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- SweetAlert -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <style>
+        body {
+            background: linear-gradient(120deg, #141E30, #243B55);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .card {
+            border-radius: 18px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.35);
+        }
+        .card-header {
+            background: linear-gradient(120deg, #0f2027, #203a43, #2c5364);
+            color: white;
+            border-radius: 18px 18px 0 0;
+        }
+        .form-control {
+            border-radius: 12px;
+            height: 45px;
+            padding-right: 40px; /* space for eye icon */
+        }
+        .btn-custom {
+            border-radius: 30px;
+            padding: 10px 28px;
+            font-weight: 600;
+        }
+        .error {
+            color: #ff4d4d;
+            font-size: 14px;
+            display: none;
+        }
+        .password-toggle {
+            position: absolute;
+            right: 15px;
+            top: 38px;
+            cursor: pointer;
+            color: #888;
+        }
+        .position-relative {
+            position: relative;
+        }
+    </style>
+</head>
+<body>
+
+<div class="col-md-6">
+    <div class="card">
+        <div class="card-header text-center">
+            <h3><i class="fa-solid fa-right-to-bracket"></i> Login</h3>
+        </div>
+
+        <div class="card-body p-4">
+
+            <form id="loginForm" th:action="@{/login}" method="post">
+
+                <div class="form-group">
+                    <label><i class="fa-solid fa-user"></i> Username</label>
+                    <input type="text" id="username" name="username" class="form-control" placeholder="Enter username">
+                    <small class="error" id="usernameError">Username is required</small>
+                </div>
+
+                <div class="form-group position-relative">
+                    <label><i class="fa-solid fa-lock"></i> Password</label>
+                    <input type="password" id="password" name="password" class="form-control" placeholder="Enter password">
+                    <i class="fa-solid fa-eye password-toggle" id="togglePassword"></i>
+                    <small class="error" id="passwordError">Password is required</small>
+                </div>
+
+                <div class="text-center mt-4">
+                    <button type="submit" class="btn btn-success btn-custom">
+                        <i class="fa-solid fa-right-to-bracket"></i> Login
+                    </button>
+
+                    <a th:href="@{/register}" class="btn btn-secondary btn-custom">
+                        Register
+                    </a>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    // Show/hide password
+    const togglePassword = document.getElementById('togglePassword');
+    const password = document.getElementById('password');
+
+    togglePassword.addEventListener('click', function () {
+        const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+        password.setAttribute('type', type);
+        this.classList.toggle('fa-eye-slash');
+    });
+
+    // Form validation and SweetAlert
+    document.getElementById("loginForm").addEventListener("submit", function (e) {
+
+        let valid = true;
+
+        let usernameVal = document.getElementById("username").value.trim();
+        let passwordVal = document.getElementById("password").value.trim();
+
+        document.querySelectorAll(".error").forEach(el => el.style.display = "none");
+
+        if (usernameVal === "") {
+            document.getElementById("usernameError").style.display = "block";
+            valid = false;
+        }
+
+        if (passwordVal === "") {
+            document.getElementById("passwordError").style.display = "block";
+            valid = false;
+        }
+
+        if (!valid) {
+            e.preventDefault();
+            return;
+        }
+
+        e.preventDefault(); // stop submit for popup
+
+        Swal.fire({
+            icon: "success",
+            title: "Login Successful!",
+            text: "Welcome back, " + usernameVal,
+            confirmButtonColor: "#28a745"
+        }).then(() => {
+            e.target.submit(); // actual submit
+        });
+
+    });
+</script>
+
+</body>
+</html>
