@@ -1,5 +1,4 @@
 package com.univ.repository;
-import org.springframework.stereotype.Repository;
 import java.util.List;
 import com.univ.entity.Employee;
 import org.springframework.data.jpa.repository.JpaRepository;
